@@ -31,8 +31,8 @@ const App: React.FC = () => {
         const key = option.name;
         const value = formData[key];
         if (value) {
-            // For 'gen' command, 'prompt' is a positional argument
-            if (activeCommand === CommandType.GEN && key === 'prompt') {
+            // For 'gen' and 'example' commands, 'prompt' is a positional argument
+            if ((activeCommand === CommandType.GEN || activeCommand === CommandType.EXAMPLE) && key === 'prompt') {
                 positionalArgs += ` ${value}`;
                 continue;
             }
@@ -57,9 +57,9 @@ const App: React.FC = () => {
     });
   };
 
-  const handleSetupGenCommand = (promptPath: string) => {
+  const handleSetupCommandForPrompt = (command: CommandType, promptPath: string) => {
     setView('builder');
-    setActiveCommand(CommandType.GEN);
+    setActiveCommand(command);
     setFormData({
       'prompt': promptPath,
     });
@@ -80,7 +80,7 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onSetupGenCommand={handleSetupGenCommand} />
+          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onSetupCommandForPrompt={handleSetupCommandForPrompt} />
         )}
       </main>
       {view === 'builder' && (

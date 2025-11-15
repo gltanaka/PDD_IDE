@@ -4,6 +4,7 @@ export enum CommandType {
   REVIEW = 'review',
   COMMIT = 'commit',
   TEST = 'test',
+  EXAMPLE = 'example',
 }
 
 export interface CommandOption {

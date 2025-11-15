@@ -49,5 +49,15 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'prompt', type: 'textarea', placeholder: 'e.g., Use Jest and cover all edge cases.', description: 'A specific prompt to guide the test generation.' },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for test generation.' },
     ]
+  },
+  [CommandType.EXAMPLE]: {
+    name: CommandType.EXAMPLE,
+    description: "Generate an example for a specific file or component.",
+    options: [
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/button.prompt', description: 'The path to a `.prompt` file to use for generating the example.', required: true },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for example generation.' },
+      { name: 'input-file', type: 'text', placeholder: 'e.g., ./src/components/Button.tsx', description: 'The code file to generate an example for.' },
+      { name: 'output-file', type: 'text', placeholder: 'e.g., ./src/components/Button.example.tsx', description: 'File to write the generated example to.' },
+    ]
   }
 };

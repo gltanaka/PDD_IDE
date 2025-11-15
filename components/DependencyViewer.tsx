@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
-import { MockPrompt } from '../types';
+import { CommandType, MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
 import { ChevronDownIcon, ChevronUpIcon, SparklesIcon } from './Icon';
 
@@ -22,10 +22,10 @@ export interface PositionedNode extends MockPrompt {
 
 interface DependencyViewerProps {
   onRegenerate: () => void;
-  onSetupGenCommand: (promptPath: string) => void;
+  onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
 }
 
-const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupGenCommand }) => {
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
 
@@ -276,7 +276,7 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
             ))}
           </div>
       </div>
-      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupGenCommand={onSetupGenCommand} />}
+      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} />}
     </>
   );
 };
