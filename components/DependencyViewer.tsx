@@ -1,9 +1,11 @@
+
 import React, { useMemo, useState } from 'react';
 import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
 import { CommandType, MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
 import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon, ConflictIcon } from './Icon';
+import Tooltip from './Tooltip';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 60;
@@ -174,23 +176,27 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
                     <p className="text-sm text-gray-400">The high-level requirements driving the architecture.</p>
                   </div>
                   <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
-                    <button
-                      onClick={onRegenerate}
-                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
-                    >
-                      <SparklesIcon className="w-4 h-4" />
-                      <span>Regenerate Architecture</span>
-                    </button>
-                    <button 
-                      onClick={() => setIsPrdVisible(!isPrdVisible)}
-                      className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      aria-expanded={isPrdVisible}
-                      aria-label={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}
-                    >
-                      {isPrdVisible 
-                        ? <ChevronUpIcon className="w-6 h-6 text-gray-300" /> 
-                        : <ChevronDownIcon className="w-6 h-6 text-gray-300" />}
-                    </button>
+                    <Tooltip content="Regenerate architecture.json from the PRD">
+                      <button
+                        onClick={onRegenerate}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                      >
+                        <SparklesIcon className="w-4 h-4" />
+                        <span>Regenerate Architecture</span>
+                      </button>
+                    </Tooltip>
+                    <Tooltip content={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}>
+                      <button 
+                        onClick={() => setIsPrdVisible(!isPrdVisible)}
+                        className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        aria-expanded={isPrdVisible}
+                        aria-label={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}
+                      >
+                        {isPrdVisible 
+                          ? <ChevronUpIcon className="w-6 h-6 text-gray-300" /> 
+                          : <ChevronDownIcon className="w-6 h-6 text-gray-300" />}
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
 
@@ -269,26 +275,26 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
                 })}
               </svg>
               {layout.nodes.map(node => (
-                <button
-                  key={node.id}
-                  onClick={() => handleNodeClick(node)}
-                  className={`absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer focus:outline-none focus:ring-2 transition-all duration-200 ${
-                    isSplitMode
-                      ? 'hover:ring-2 hover:ring-purple-400 focus:ring-purple-500'
-                      : 'hover:ring-2 hover:ring-blue-400 focus:ring-blue-500'
-                  }`}
-                  style={{
-                    width: NODE_WIDTH,
-                    height: NODE_HEIGHT,
-                    transform: `translate(${node.x}px, ${node.y + yOffset}px)`,
-                  }}
-                  title={node.path}
-                  role="figure"
-                  aria-label={`Prompt: ${node.label}`}
-                >
-                  <p className="font-bold text-sm text-white break-words">{node.label}</p>
-                  <p className="text-xs text-gray-400 truncate w-full">{node.path.substring(0, node.path.lastIndexOf('/')) || './'}</p>
-                </button>
+                 <Tooltip content={node.path} key={node.id}>
+                  <button
+                    onClick={() => handleNodeClick(node)}
+                    className={`absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer focus:outline-none focus:ring-2 transition-all duration-200 ${
+                      isSplitMode
+                        ? 'hover:ring-2 hover:ring-purple-400 focus:ring-purple-500'
+                        : 'hover:ring-2 hover:ring-blue-400 focus:ring-blue-500'
+                    }`}
+                    style={{
+                      width: NODE_WIDTH,
+                      height: NODE_HEIGHT,
+                      transform: `translate(${node.x}px, ${node.y + yOffset}px)`,
+                    }}
+                    role="figure"
+                    aria-label={`Prompt: ${node.label}`}
+                  >
+                    <p className="font-bold text-sm text-white break-words">{node.label}</p>
+                    <p className="text-xs text-gray-400 truncate w-full">{node.path.substring(0, node.path.lastIndexOf('/')) || './'}</p>
+                  </button>
+                </Tooltip>
               ))}
             </div>
         </div>
@@ -297,24 +303,28 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
             <h3 className="text-lg font-semibold text-white mb-2">Graph Actions</h3>
             <p className="text-xs text-gray-400 mb-4">Click an action to get started.</p>
             <div className="space-y-2">
-              <button
-                onClick={() => setIsSplitMode(prev => !prev)}
-                className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
-                ${isSplitMode 
-                    ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
-                    : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
-                }`}
-              >
-                <SplitIcon className="w-4 h-4" />
-                <span>{isSplitMode ? 'Cancel Split' : 'Split Prompt'}</span>
-              </button>
-              <button
-                onClick={() => onSetupCommand(CommandType.CONFLICT)}
-                className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
-              >
-                <ConflictIcon className="w-4 h-4" />
-                <span>Detect Conflicts</span>
-              </button>
+              <Tooltip content={isSplitMode ? 'Exit split mode' : 'Enter split mode to select a prompt to split'}>
+                <button
+                  onClick={() => setIsSplitMode(prev => !prev)}
+                  className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
+                  ${isSplitMode 
+                      ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
+                      : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+                  }`}
+                >
+                  <SplitIcon className="w-4 h-4" />
+                  <span>{isSplitMode ? 'Cancel Split' : 'Split Prompt'}</span>
+                </button>
+              </Tooltip>
+              <Tooltip content="Check for conflicting instructions between prompts">
+                <button
+                  onClick={() => onSetupCommand(CommandType.CONFLICT)}
+                  className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+                >
+                  <ConflictIcon className="w-4 h-4" />
+                  <span>Detect Conflicts</span>
+                </button>
+              </Tooltip>
             </div>
           </div>
         </div>

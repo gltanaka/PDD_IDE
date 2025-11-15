@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ClipboardIcon, CheckIcon } from './Icon';
+import Tooltip from './Tooltip';
 
 interface GeneratedCommandProps {
   command: string;
@@ -29,17 +30,19 @@ const GeneratedCommand: React.FC<GeneratedCommandProps> = ({ command }) => {
             <pre className="text-sm text-blue-300 whitespace-pre-wrap break-all pr-12">
                 <code>{command}</code>
             </pre>
-            <button
-                onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors"
-                aria-label="Copy command"
-            >
-                {isCopied ? (
-                <CheckIcon className="w-5 h-5 text-green-400" />
-                ) : (
-                <ClipboardIcon className="w-5 h-5 text-gray-400" />
-                )}
-            </button>
+            <Tooltip content={isCopied ? 'Copied!' : 'Copy command'}>
+              <button
+                  onClick={handleCopy}
+                  className="absolute top-3 right-3 p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors"
+                  aria-label="Copy command"
+              >
+                  {isCopied ? (
+                  <CheckIcon className="w-5 h-5 text-green-400" />
+                  ) : (
+                  <ClipboardIcon className="w-5 h-5 text-gray-400" />
+                  )}
+              </button>
+            </Tooltip>
         </div>
     </div>
   );

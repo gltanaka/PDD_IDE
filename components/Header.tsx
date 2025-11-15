@@ -1,4 +1,6 @@
+
 import React from 'react';
+import Tooltip from './Tooltip';
 
 type View = 'builder' | 'dependencies';
 
@@ -35,12 +37,16 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => {
             </a>
           </div>
           <nav className="flex items-center space-x-2 flex-shrink-0">
-            <button onClick={() => onViewChange('dependencies')} className={navButtonClasses('dependencies')}>
-              Graph
-            </button>
-            <button onClick={() => onViewChange('builder')} className={navButtonClasses('builder')}>
-              Builder
-            </button>
+            <Tooltip content="View prompt dependency graph">
+              <button onClick={() => onViewChange('dependencies')} className={navButtonClasses('dependencies')}>
+                Graph
+              </button>
+            </Tooltip>
+            <Tooltip content="Construct a pdd command">
+              <button onClick={() => onViewChange('builder')} className={navButtonClasses('builder')}>
+                Builder
+              </button>
+            </Tooltip>
           </nav>
         </div>
       </div>
