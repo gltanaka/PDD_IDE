@@ -59,5 +59,25 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'input-file', type: 'text', placeholder: 'e.g., ./src/components/Button.tsx', description: 'The code file to generate an example for.' },
       { name: 'output-file', type: 'text', placeholder: 'e.g., ./src/components/Button.example.tsx', description: 'File to write the generated example to.' },
     ]
+  },
+  [CommandType.CRASH]: {
+    name: CommandType.CRASH,
+    description: "Get help fixing a crash using a stack trace or error log.",
+    options: [
+      { name: 'stack-trace', type: 'textarea', placeholder: 'Paste the full stack trace here...', description: 'The stack trace or error log from the crash.', required: true },
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/button.prompt', description: 'The path to a `.prompt` file related to the crashing code.', required: false },
+      { name: 'context-file', type: 'text', placeholder: 'e.g., ./src/components/Button.tsx', description: 'Relevant code file(s) to provide as context.' },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for generating the fix.' },
+      { name: 'output-file', type: 'text', placeholder: 'e.g., ./src/components/Button.fixed.tsx', description: 'File to write the suggested fix to.' },
+    ]
+  },
+  [CommandType.VERIFY]: {
+    name: CommandType.VERIFY,
+    description: "Verify that an example correctly implements the functionality described in a prompt.",
+    options: [
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/button.prompt', description: 'The path to a `.prompt` file that defines the component.', required: true },
+      { name: 'example-file', type: 'text', placeholder: 'e.g., ./src/components/Button.example.tsx', description: 'The code file containing the example to verify.', required: true },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for verification.' },
+    ]
   }
 };

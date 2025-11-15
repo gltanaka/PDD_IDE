@@ -31,8 +31,8 @@ const App: React.FC = () => {
         const key = option.name;
         const value = formData[key];
         if (value) {
-            // For 'gen' and 'example' commands, 'prompt' is a positional argument
-            if ((activeCommand === CommandType.GEN || activeCommand === CommandType.EXAMPLE) && key === 'prompt') {
+            // For 'gen', 'example', and 'verify' commands, 'prompt' is a positional argument
+            if ((activeCommand === CommandType.GEN || activeCommand === CommandType.EXAMPLE || activeCommand === CommandType.VERIFY) && key === 'prompt') {
                 positionalArgs += ` ${value}`;
                 continue;
             }

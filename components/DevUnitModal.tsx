@@ -105,14 +105,32 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
               </button>
             )}
             {activeTab === 'example' && (
-              <button
-                onClick={() => onSetupCommandForPrompt(CommandType.EXAMPLE, node.path)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
-                aria-label="Create an example from this prompt"
-              >
-                <SparklesIcon className="w-4 h-4" />
-                <span>Create Example</span>
-              </button>
+              <>
+                <button
+                  onClick={() => onSetupCommandForPrompt(CommandType.EXAMPLE, node.path)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                  aria-label="Create an example from this prompt"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  <span>Create Example</span>
+                </button>
+                <button
+                  onClick={() => onSetupCommandForPrompt(CommandType.VERIFY, node.path)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-green-500 transition-colors"
+                  aria-label="Verify functionality using this prompt"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  <span>Verify</span>
+                </button>
+                <button
+                  onClick={() => onSetupCommandForPrompt(CommandType.CRASH, node.path)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
+                  aria-label="Fix a crash using this prompt"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  <span>Fix Crash</span>
+                </button>
+              </>
             )}
             <button
               onClick={handleCopy}

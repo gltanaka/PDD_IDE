@@ -5,6 +5,8 @@ export enum CommandType {
   COMMIT = 'commit',
   TEST = 'test',
   EXAMPLE = 'example',
+  CRASH = 'crash',
+  VERIFY = 'verify',
 }
 
 export interface CommandOption {
