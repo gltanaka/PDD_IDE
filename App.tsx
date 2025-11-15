@@ -31,15 +31,15 @@ const App: React.FC = () => {
         const key = option.name;
         const value = formData[key];
         if (value) {
-            // For certain commands, 'prompt' is a positional argument
-            const isPositionalPrompt = (
-                activeCommand === CommandType.GEN || 
-                activeCommand === CommandType.EXAMPLE || 
-                activeCommand === CommandType.VERIFY ||
-                activeCommand === CommandType.SPLIT
-            ) && key === 'prompt';
+            // For certain commands, some arguments are positional
+            const isPositional = (
+                (activeCommand === CommandType.GEN || 
+                 activeCommand === CommandType.EXAMPLE || 
+                 activeCommand === CommandType.VERIFY ||
+                 activeCommand === CommandType.SPLIT) && key === 'prompt'
+            ) || (activeCommand === CommandType.CONFLICT && key === 'files');
 
-            if (isPositionalPrompt) {
+            if (isPositional) {
                 positionalArgs += ` ${value}`;
                 continue;
             }
@@ -72,6 +72,12 @@ const App: React.FC = () => {
     });
   };
 
+  const handleSetupCommand = (command: CommandType) => {
+    setView('builder');
+    setActiveCommand(command);
+    setFormData({});
+  };
+
 
   return (
     <div className="min-h-screen">
@@ -87,7 +93,11 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onSetupCommandForPrompt={handleSetupCommandForPrompt} />
+          <DependencyViewer 
+            onRegenerate={handleRegenerateArchitecture} 
+            onSetupCommandForPrompt={handleSetupCommandForPrompt}
+            onSetupCommand={handleSetupCommand}
+          />
         )}
       </main>
       {view === 'builder' && (

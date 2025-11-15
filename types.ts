@@ -9,6 +9,7 @@ export enum CommandType {
   VERIFY = 'verify',
   FIX = 'fix',
   SPLIT = 'split',
+  CONFLICT = 'conflict',
 }
 
 export interface CommandOption {

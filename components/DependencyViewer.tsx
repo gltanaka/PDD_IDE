@@ -3,7 +3,7 @@ import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
 import { CommandType, MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
-import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon } from './Icon';
+import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon, ConflictIcon } from './Icon';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 60;
@@ -23,9 +23,10 @@ export interface PositionedNode extends MockPrompt {
 interface DependencyViewerProps {
   onRegenerate: () => void;
   onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
+  onSetupCommand: (command: CommandType) => void;
 }
 
-const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt }) => {
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt, onSetupCommand }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
   const [isSplitMode, setIsSplitMode] = useState(false);
@@ -294,18 +295,27 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
         <div className="w-56 flex-shrink-0">
           <div className="bg-gray-800/50 rounded-lg p-4 shadow-lg ring-1 ring-white/10 sticky top-28">
             <h3 className="text-lg font-semibold text-white mb-2">Graph Actions</h3>
-            <p className="text-xs text-gray-400 mb-4">Click an action, then select a node on the graph to apply it.</p>
-            <button
-              onClick={() => setIsSplitMode(prev => !prev)}
-              className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
-              ${isSplitMode 
-                  ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
-                  : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
-              }`}
-            >
-              <SplitIcon className="w-4 h-4" />
-              <span>{isSplitMode ? 'Cancel Split' : 'Split Prompt'}</span>
-            </button>
+            <p className="text-xs text-gray-400 mb-4">Click an action to get started.</p>
+            <div className="space-y-2">
+              <button
+                onClick={() => setIsSplitMode(prev => !prev)}
+                className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
+                ${isSplitMode 
+                    ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
+                    : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+                }`}
+              >
+                <SplitIcon className="w-4 h-4" />
+                <span>{isSplitMode ? 'Cancel Split' : 'Split Prompt'}</span>
+              </button>
+              <button
+                onClick={() => onSetupCommand(CommandType.CONFLICT)}
+                className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 bg-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500"
+              >
+                <ConflictIcon className="w-4 h-4" />
+                <span>Detect Conflicts</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

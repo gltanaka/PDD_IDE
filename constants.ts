@@ -97,5 +97,13 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'output-dir', type: 'text', placeholder: 'e.g., ./prompts/split/', description: 'Directory to save the new split prompts.' },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for the splitting process.' },
     ]
+  },
+  [CommandType.CONFLICT]: {
+    name: CommandType.CONFLICT,
+    description: "Check for conflicting instructions between prompts.",
+    options: [
+      { name: 'files', type: 'text', placeholder: 'e.g., ./prompts/a.prompt ./prompts/b.prompt', description: 'Optional: Specific prompt files to check. Checks all prompts if empty.' },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for conflict detection.' },
+    ]
   }
 };
