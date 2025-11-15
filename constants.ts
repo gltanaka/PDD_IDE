@@ -114,5 +114,13 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'output-file', type: 'text', placeholder: 'e.g., ./prompts/components/modal.updated.prompt', description: 'Optional: File to write the updated prompt to. Modifies in-place if not provided.' },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for dependency detection.' },
     ]
+  },
+  [CommandType.SYNC]: {
+    name: CommandType.SYNC,
+    description: "Synchronize the dev unit (code, example, test) with the prompt file.",
+    options: [
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/modal.prompt', description: 'The path to the .prompt file to synchronize.', required: true },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for synchronization.' },
+    ]
   }
 };

@@ -37,7 +37,8 @@ const App: React.FC = () => {
                  activeCommand === CommandType.EXAMPLE || 
                  activeCommand === CommandType.VERIFY ||
                  activeCommand === CommandType.SPLIT ||
-                 activeCommand === CommandType.AUTO_DEPS) && key === 'prompt'
+                 activeCommand === CommandType.AUTO_DEPS ||
+                 activeCommand === CommandType.SYNC) && key === 'prompt'
             ) || (activeCommand === CommandType.CONFLICT && key === 'files');
 
             if (isPositional) {

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PositionedNode } from './DependencyViewer';
-import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon } from './Icon';
+import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon, SyncIcon } from './Icon';
 import { CommandType } from '../types';
 import Tooltip from './Tooltip';
 
@@ -65,17 +65,29 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
             <h2 id="dev-unit-title" className="text-lg font-semibold text-white truncate" title={node.path}>{node.label}</h2>
             <p className="text-sm text-gray-400 truncate">{node.path}</p>
           </div>
-          <Tooltip content="Close">
-            <button 
-              onClick={onClose} 
-              className="p-2 rounded-full text-gray-400 hover:bg-gray-700 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Close modal"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </Tooltip>
+          <div className="flex items-center space-x-2 ml-4">
+            <Tooltip content="Synchronize the dev unit (code, example, test) with this prompt.">
+              <button
+                onClick={() => onSetupCommandForPrompt(CommandType.SYNC, node.path)}
+                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500 transition-colors"
+                aria-label="Sync dev unit with this prompt"
+              >
+                <SyncIcon className="w-4 h-4" />
+                <span>Sync</span>
+              </button>
+            </Tooltip>
+            <Tooltip content="Close">
+              <button 
+                onClick={onClose} 
+                className="p-2 rounded-full text-gray-400 hover:bg-gray-700 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Close modal"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </Tooltip>
+          </div>
         </header>
 
         <nav className="flex space-x-2 px-4 pt-2 border-b border-gray-700 flex-shrink-0">

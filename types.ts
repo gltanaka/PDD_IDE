@@ -11,6 +11,7 @@ export enum CommandType {
   SPLIT = 'split',
   CONFLICT = 'conflict',
   AUTO_DEPS = 'auto-deps',
+  SYNC = 'sync',
 }
 
 export interface CommandOption {
