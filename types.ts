@@ -10,6 +10,7 @@ export enum CommandType {
   FIX = 'fix',
   SPLIT = 'split',
   CONFLICT = 'conflict',
+  AUTO_DEPS = 'auto-deps',
 }
 
 export interface CommandOption {

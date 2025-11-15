@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PositionedNode } from './DependencyViewer';
-import { ClipboardIcon, CheckIcon, SparklesIcon } from './Icon';
+import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon } from './Icon';
 import { CommandType } from '../types';
 import Tooltip from './Tooltip';
 
@@ -89,16 +89,28 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
         <main className="p-4 overflow-y-auto relative">
           <div className="absolute top-6 right-6 flex items-center space-x-2">
             {activeTab === 'prompt' && (
-              <Tooltip content="Modify code by applying changes from this prompt.">
-                <button
-                  onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
-                  aria-label="Update from this prompt"
-                >
-                  <SparklesIcon className="w-4 h-4" />
-                  <span>Update</span>
-                </button>
-              </Tooltip>
+              <>
+                <Tooltip content="Modify code by applying changes from this prompt.">
+                  <button
+                    onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                    aria-label="Update from this prompt"
+                  >
+                    <SparklesIcon className="w-4 h-4" />
+                    <span>Update</span>
+                  </button>
+                </Tooltip>
+                <Tooltip content="Automatically detect and add # Imports dependencies to this prompt.">
+                  <button
+                    onClick={() => onSetupCommandForPrompt(CommandType.AUTO_DEPS, node.path)}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-teal-500 transition-colors"
+                    aria-label="Find dependencies for this prompt"
+                  >
+                    <LinkIcon className="w-4 h-4" />
+                    <span>Auto-Deps</span>
+                  </button>
+                </Tooltip>
+              </>
             )}
             {activeTab === 'code' && (
               <Tooltip content="Regenerate this code from its prompt.">

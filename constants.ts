@@ -105,5 +105,14 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'files', type: 'text', placeholder: 'e.g., ./prompts/a.prompt ./prompts/b.prompt', description: 'Optional: Specific prompt files to check. Checks all prompts if empty.' },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for conflict detection.' },
     ]
+  },
+  [CommandType.AUTO_DEPS]: {
+    name: CommandType.AUTO_DEPS,
+    description: "Automatically detect and add # Imports dependencies to a prompt file.",
+    options: [
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/modal.prompt', description: 'The path to the .prompt file to analyze for dependencies.', required: true },
+      { name: 'output-file', type: 'text', placeholder: 'e.g., ./prompts/components/modal.updated.prompt', description: 'Optional: File to write the updated prompt to. Modifies in-place if not provided.' },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for dependency detection.' },
+    ]
   }
 };
