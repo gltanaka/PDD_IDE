@@ -3,7 +3,7 @@ import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
 import { CommandType, MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
-import { ChevronDownIcon, ChevronUpIcon, SparklesIcon } from './Icon';
+import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon } from './Icon';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 60;
@@ -28,6 +28,7 @@ interface DependencyViewerProps {
 const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
+  const [isSplitMode, setIsSplitMode] = useState(false);
 
   const layout = useMemo(() => {
     const nodes = mockPrompts.map(p => ({
@@ -139,12 +140,21 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
     };
   }, [firstLayerNodes, layout.width, yOffset]);
 
+  const handleNodeClick = (node: PositionedNode) => {
+    if (isSplitMode) {
+      onSetupCommandForPrompt(CommandType.SPLIT, node.path);
+      setIsSplitMode(false);
+    } else {
+      setSelectedNodeId(node.id);
+    }
+  };
+
 
   return (
     <>
       <div className="bg-gray-800/50 rounded-lg p-6 shadow-lg ring-1 ring-white/10 overflow-auto">
           <div 
-            className="relative"
+            className={`relative ${isSplitMode ? 'cursor-crosshair' : ''}`}
             style={{ width: layout.width, height: totalHeight }}
             aria-label="Prompt dependency graph"
           >
@@ -162,6 +172,17 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
                   <p className="text-sm text-gray-400">The high-level requirements driving the architecture.</p>
                 </div>
                 <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
+                   <button
+                    onClick={() => setIsSplitMode(prev => !prev)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700
+                    ${isSplitMode 
+                        ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
+                        : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+                    }`}
+                  >
+                    <SplitIcon className="w-4 h-4" />
+                    <span>Split Prompt</span>
+                  </button>
                   <button
                     onClick={onRegenerate}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
@@ -259,8 +280,12 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
             {layout.nodes.map(node => (
               <button
                 key={node.id}
-                onClick={() => setSelectedNodeId(node.id)}
-                className="absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer hover:ring-2 hover:ring-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                onClick={() => handleNodeClick(node)}
+                className={`absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer focus:outline-none focus:ring-2 transition-all duration-200 ${
+                  isSplitMode
+                    ? 'hover:ring-2 hover:ring-purple-400 focus:ring-purple-500'
+                    : 'hover:ring-2 hover:ring-blue-400 focus:ring-blue-500'
+                }`}
                 style={{
                   width: NODE_WIDTH,
                   height: NODE_HEIGHT,

@@ -88,5 +88,14 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'prompt', type: 'textarea', placeholder: 'e.g., The original prompt for the component being tested.', description: 'The prompt that describes the expected behavior.' },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for fixing the test.' },
     ]
+  },
+  [CommandType.SPLIT]: {
+    name: CommandType.SPLIT,
+    description: "Split a large prompt into smaller, more manageable prompts.",
+    options: [
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/full-stack-app.prompt', description: 'The path to the .prompt file to split.', required: true },
+      { name: 'output-dir', type: 'text', placeholder: 'e.g., ./prompts/split/', description: 'Directory to save the new split prompts.' },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for the splitting process.' },
+    ]
   }
 };

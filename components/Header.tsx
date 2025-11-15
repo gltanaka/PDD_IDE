@@ -35,11 +35,11 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => {
             </a>
           </div>
           <nav className="flex items-center space-x-2 flex-shrink-0">
-            <button onClick={() => onViewChange('builder')} className={navButtonClasses('builder')}>
-              Builder
-            </button>
             <button onClick={() => onViewChange('dependencies')} className={navButtonClasses('dependencies')}>
               Graph
+            </button>
+            <button onClick={() => onViewChange('builder')} className={navButtonClasses('builder')}>
+              Builder
             </button>
           </nav>
         </div>

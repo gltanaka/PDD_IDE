@@ -8,6 +8,7 @@ export enum CommandType {
   CRASH = 'crash',
   VERIFY = 'verify',
   FIX = 'fix',
+  SPLIT = 'split',
 }
 
 export interface CommandOption {

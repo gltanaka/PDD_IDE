@@ -12,7 +12,7 @@ type View = 'builder' | 'dependencies';
 const App: React.FC = () => {
   const [activeCommand, setActiveCommand] = useState<CommandType>(CommandType.SCAFFOLD);
   const [formData, setFormData] = useState<Record<string, string>>({});
-  const [view, setView] = useState<View>('builder');
+  const [view, setView] = useState<View>('dependencies');
 
   const activeConfig = COMMANDS[activeCommand];
 
@@ -31,8 +31,15 @@ const App: React.FC = () => {
         const key = option.name;
         const value = formData[key];
         if (value) {
-            // For 'gen', 'example', and 'verify' commands, 'prompt' is a positional argument
-            if ((activeCommand === CommandType.GEN || activeCommand === CommandType.EXAMPLE || activeCommand === CommandType.VERIFY) && key === 'prompt') {
+            // For certain commands, 'prompt' is a positional argument
+            const isPositionalPrompt = (
+                activeCommand === CommandType.GEN || 
+                activeCommand === CommandType.EXAMPLE || 
+                activeCommand === CommandType.VERIFY ||
+                activeCommand === CommandType.SPLIT
+            ) && key === 'prompt';
+
+            if (isPositionalPrompt) {
                 positionalArgs += ` ${value}`;
                 continue;
             }
