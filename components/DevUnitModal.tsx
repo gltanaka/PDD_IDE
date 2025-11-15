@@ -132,6 +132,26 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 </button>
               </>
             )}
+            {activeTab === 'test' && (
+              <>
+                <button
+                  onClick={() => onSetupCommandForPrompt(CommandType.TEST, node.path)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                  aria-label="Generate a test from this prompt"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  <span>Generate Test</span>
+                </button>
+                <button
+                  onClick={() => onSetupCommandForPrompt(CommandType.FIX, node.path)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors"
+                  aria-label="Fix a test using this prompt"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  <span>Fix Test</span>
+                </button>
+              </>
+            )}
             <button
               onClick={handleCopy}
               className="p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-700 transition-colors"

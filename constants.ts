@@ -79,5 +79,14 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'example-file', type: 'text', placeholder: 'e.g., ./src/components/Button.example.tsx', description: 'The code file containing the example to verify.', required: true },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for verification.' },
     ]
+  },
+  [CommandType.FIX]: {
+    name: CommandType.FIX,
+    description: "Fix a failing test file using AI.",
+    options: [
+      { name: 'input-file', type: 'text', placeholder: 'e.g., ./src/utils/math.test.ts', description: 'The failing test file to fix.', required: true },
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., The original prompt for the component being tested.', description: 'The prompt that describes the expected behavior.' },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for fixing the test.' },
+    ]
   }
 };
