@@ -1,10 +1,9 @@
-
 import React, { useMemo, useState } from 'react';
 import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
 import { CommandType, MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
-import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon, ConflictIcon } from './Icon';
+import { ChevronDownIcon, ChevronUpIcon, SparklesIcon, SplitIcon, ConflictIcon, LightBulbIcon } from './Icon';
 import Tooltip from './Tooltip';
 
 const NODE_WIDTH = 200;
@@ -26,9 +25,10 @@ interface DependencyViewerProps {
   onRegenerate: () => void;
   onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
   onSetupCommand: (command: CommandType) => void;
+  onProposeChange: () => void;
 }
 
-const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt, onSetupCommand }) => {
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt, onSetupCommand, onProposeChange }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
   const [isSplitMode, setIsSplitMode] = useState(false);
@@ -303,6 +303,15 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
             <h3 className="text-lg font-semibold text-white mb-2">Graph Actions</h3>
             <p className="text-xs text-gray-400 mb-4">Click an action to get started.</p>
             <div className="space-y-2">
+               <Tooltip content="Describe a change to find the right prompt to edit">
+                <button
+                  onClick={onProposeChange}
+                  className="w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 bg-teal-600 hover:bg-teal-700 focus:ring-teal-500"
+                >
+                  <LightBulbIcon className="w-4 h-4" />
+                  <span>Propose Change</span>
+                </button>
+              </Tooltip>
               <Tooltip content={isSplitMode ? 'Exit split mode' : 'Enter split mode to select a prompt to split'}>
                 <button
                   onClick={() => setIsSplitMode(prev => !prev)}
@@ -329,7 +338,7 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
           </div>
         </div>
       </div>
-      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} />}
+      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} allPrompts={mockPrompts} />}
     </>
   );
 };

@@ -122,5 +122,13 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/modal.prompt', description: 'The path to the .prompt file to synchronize.', required: true },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for synchronization.' },
     ]
+  },
+  [CommandType.CHANGE]: {
+    name: CommandType.CHANGE,
+    description: "Propose which prompt to change for a given request.",
+    options: [
+      { name: 'change-request', type: 'textarea', placeholder: 'e.g., "Add a loading spinner to the button"', description: 'A natural language description of the desired change.', required: true },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for analyzing the change request.' },
+    ]
   }
 };

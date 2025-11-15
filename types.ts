@@ -12,6 +12,7 @@ export enum CommandType {
   CONFLICT = 'conflict',
   AUTO_DEPS = 'auto-deps',
   SYNC = 'sync',
+  CHANGE = 'change',
 }
 
 export interface CommandOption {

@@ -1,24 +1,55 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PositionedNode } from './DependencyViewer';
-import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon, SyncIcon } from './Icon';
-import { CommandType } from '../types';
+import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon, SyncIcon, DocumentArrowDownIcon } from './Icon';
+import { CommandType, MockPrompt } from '../types';
 import Tooltip from './Tooltip';
 
 interface DevUnitModalProps {
   node: PositionedNode;
   onClose: () => void;
   onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
+  allPrompts: MockPrompt[];
 }
 
 type Tab = 'prompt' | 'code' | 'example' | 'test';
 
-const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupCommandForPrompt }) => {
+const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupCommandForPrompt, allPrompts }) => {
   const [activeTab, setActiveTab] = useState<Tab>('prompt');
   const [isCopied, setIsCopied] = useState(false);
+  const [isPreprocessedViewVisible, setIsPreprocessedViewVisible] = useState(false);
 
   const tabs: Tab[] = ['prompt', 'code', 'example', 'test'];
   const content = node.devUnit[activeTab];
+
+  const preprocessPrompt = (promptId: string, allPromptsMap: Map<string, MockPrompt>, visited = new Set<string>()): string => {
+    if (visited.has(promptId)) {
+      return `[Circular Dependency Detected: ${promptId}]`;
+    }
+    visited.add(promptId);
+
+    const prompt = allPromptsMap.get(promptId);
+    if (!prompt) {
+      return `[Import not found: ${promptId}]`;
+    }
+
+    let content = prompt.devUnit.prompt;
+    const importRegex = /# Imports\n((?:- .+\n?)+)/;
+    const importMatch = content.match(importRegex);
+
+    if (importMatch) {
+      const importBlock = importMatch[0];
+      const importListStr = importMatch[1];
+      const imports = importListStr.split('\n').filter(line => line.startsWith('- ')).map(line => line.substring(2).trim());
+      
+      const preprocessedImports = imports.map(imp => 
+        `--- Start of import: ${imp} ---\n${preprocessPrompt(imp, allPromptsMap, new Set(visited))}\n--- End of import: ${imp} ---`
+      ).join('\n\n');
+
+      content = content.replace(importBlock, preprocessedImports);
+    }
+
+    return content.trim();
+  };
 
   useEffect(() => {
     if (isCopied) {
@@ -30,7 +61,15 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
   // Reset copy state when tab changes
   useEffect(() => {
     setIsCopied(false);
+    setIsPreprocessedViewVisible(false);
   }, [activeTab]);
+
+  const allPromptsMap = useMemo(() => new Map(allPrompts.map(p => [p.id, p])), [allPrompts]);
+
+  const preprocessedContent = useMemo(() => {
+    if (!isPreprocessedViewVisible) return '';
+    return preprocessPrompt(node.id, allPromptsMap);
+  }, [isPreprocessedViewVisible, node.id, allPromptsMap]);
 
 
   const handleCopy = () => {
@@ -105,7 +144,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Modify code by applying changes from this prompt.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
                     aria-label="Update from this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -115,11 +154,22 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Automatically detect and add # Imports dependencies to this prompt.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.AUTO_DEPS, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-teal-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-teal-500 transition-colors"
                     aria-label="Find dependencies for this prompt"
                   >
                     <LinkIcon className="w-4 h-4" />
                     <span>Auto-Deps</span>
+                  </button>
+                </Tooltip>
+                 <Tooltip content={isPreprocessedViewVisible ? "Hide the preprocessed view" : "Show the prompt with all # Imports resolved."}>
+                  <button
+                    onClick={() => setIsPreprocessedViewVisible(prev => !prev)}
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-indigo-500 transition-colors"
+                    aria-label="Preprocess prompt"
+                    aria-expanded={isPreprocessedViewVisible}
+                  >
+                    <DocumentArrowDownIcon className="w-4 h-4" />
+                    <span>{isPreprocessedViewVisible ? 'Hide' : 'Preprocess'}</span>
                   </button>
                 </Tooltip>
               </>
@@ -128,7 +178,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
               <Tooltip content="Regenerate this code from its prompt.">
                 <button
                   onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
                   aria-label="Regenerate code from this prompt"
                 >
                   <SparklesIcon className="w-4 h-4" />
@@ -141,7 +191,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Generate a usage example for this component.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.EXAMPLE, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
                     aria-label="Create an example from this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -151,7 +201,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Verify that an example implements the prompt's requirements.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.VERIFY, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-green-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-green-500 transition-colors"
                     aria-label="Verify functionality using this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -161,7 +211,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Diagnose a crash using this prompt and a stack trace.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.CRASH, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
                     aria-label="Fix a crash using this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -175,7 +225,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Generate a test file for this component based on the prompt.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.TEST, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
                     aria-label="Generate a test from this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -185,7 +235,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                 <Tooltip content="Fix a failing test file using this prompt as context.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.FIX, node.path)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors"
                     aria-label="Fix a test using this prompt"
                   >
                     <SparklesIcon className="w-4 h-4" />
@@ -211,6 +261,16 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
           <pre className="bg-gray-900/50 rounded-md p-4 text-sm text-gray-200 whitespace-pre-wrap break-all">
             <code>{content}</code>
           </pre>
+          {isPreprocessedViewVisible && (
+            <div className="mt-4 animate-fade-in">
+              <div className="border-t border-gray-700 pt-4">
+                <h4 className="text-sm font-semibold text-gray-300 mb-2">Preprocessed Prompt</h4>
+                <pre className="bg-gray-900/80 rounded-md p-4 text-sm text-gray-200 whitespace-pre-wrap break-all border border-indigo-500/50 max-h-96 overflow-auto">
+                  <code>{preprocessedContent}</code>
+                </pre>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

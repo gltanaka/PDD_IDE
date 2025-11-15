@@ -6,6 +6,7 @@ import CommandForm from './components/CommandForm';
 import GeneratedCommand from './components/GeneratedCommand';
 import Header from './components/Header';
 import DependencyViewer from './components/DependencyViewer';
+import ChangeModal from './components/ChangeModal';
 
 type View = 'builder' | 'dependencies';
 
@@ -13,6 +14,7 @@ const App: React.FC = () => {
   const [activeCommand, setActiveCommand] = useState<CommandType>(CommandType.SCAFFOLD);
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [view, setView] = useState<View>('dependencies');
+  const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
 
   const activeConfig = COMMANDS[activeCommand];
 
@@ -38,11 +40,15 @@ const App: React.FC = () => {
                  activeCommand === CommandType.VERIFY ||
                  activeCommand === CommandType.SPLIT ||
                  activeCommand === CommandType.AUTO_DEPS ||
-                 activeCommand === CommandType.SYNC) && key === 'prompt'
+                 activeCommand === CommandType.SYNC ||
+                 activeCommand === CommandType.CHANGE
+                ) && (key === 'prompt' || key === 'change-request')
             ) || (activeCommand === CommandType.CONFLICT && key === 'files');
 
             if (isPositional) {
-                positionalArgs += ` ${value}`;
+                // For change-request, we need to wrap in quotes
+                const positionalValue = (key === 'change-request') ? `"${value.replace(/"/g, '\\"')}"` : value;
+                positionalArgs += ` ${positionalValue}`;
                 continue;
             }
             // Escape double quotes within the value and wrap it in quotes if it contains spaces
@@ -80,6 +86,15 @@ const App: React.FC = () => {
     setFormData({});
   };
 
+  const handleProposeChange = (changeRequest: string) => {
+    setIsChangeModalOpen(false);
+    setView('builder');
+    setActiveCommand(CommandType.CHANGE);
+    setFormData({
+      'change-request': changeRequest,
+    });
+  };
+
 
   return (
     <div className="min-h-screen">
@@ -99,6 +114,7 @@ const App: React.FC = () => {
             onRegenerate={handleRegenerateArchitecture} 
             onSetupCommandForPrompt={handleSetupCommandForPrompt}
             onSetupCommand={handleSetupCommand}
+            onProposeChange={() => setIsChangeModalOpen(true)}
           />
         )}
       </main>
@@ -106,6 +122,12 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <GeneratedCommand command={generatedCommand} />
         </div>
+      )}
+      {isChangeModalOpen && (
+        <ChangeModal 
+          onClose={() => setIsChangeModalOpen(false)} 
+          onSubmit={handleProposeChange} 
+        />
       )}
     </div>
   );
