@@ -16,11 +16,12 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
     name: CommandType.GEN,
     description: "Generate new code or modify existing code.",
     options: [
-      { name: 'prompt', type: 'textarea', placeholder: 'e.g., Create a button component with a primary and secondary variant.', description: 'The main prompt describing the code to generate.', required: true },
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., Create a button component... or ./prompts/button.prompt', description: 'The main prompt content, or a path to a `.prompt` file.', required: true },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for generation.' },
       { name: 'input-file', type: 'text', placeholder: 'e.g., ./src/components/Button.tsx', description: 'File(s) to use as input for modification.' },
       { name: 'output-file', type: 'text', placeholder: 'e.g., ./src/components/Button.tsx', description: 'File to write the generated code to.' },
       { name: 'context-file', type: 'text', placeholder: 'e.g., ./src/types.ts', description: 'Additional file(s) to provide as context.' },
+      { name: 'env-file', type: 'text', placeholder: 'e.g., KEY=VALUE', description: 'Pass an environment variable to the prompt.' },
     ]
   },
   [CommandType.REVIEW]: {

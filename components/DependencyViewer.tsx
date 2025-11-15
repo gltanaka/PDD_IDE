@@ -3,7 +3,7 @@ import { mockPrompts } from '../data/mockPrompts';
 import { mockPrd } from '../data/mockPrd';
 import { MockPrompt } from '../types';
 import DevUnitModal from './DevUnitModal';
-import { ChevronDownIcon, ChevronUpIcon } from './Icon';
+import { ChevronDownIcon, ChevronUpIcon, SparklesIcon } from './Icon';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 60;
@@ -20,7 +20,11 @@ export interface PositionedNode extends MockPrompt {
   y: number;
 }
 
-const DependencyViewer = () => {
+interface DependencyViewerProps {
+  onRegenerate: () => void;
+}
+
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
 
@@ -148,19 +152,35 @@ const DependencyViewer = () => {
               className="absolute top-0 left-0 w-full bg-gray-700/50 rounded-lg shadow-md ring-1 ring-white/10 transition-all duration-300 ease-in-out z-10"
               style={{ height: prdContainerHeight }}
             >
-              <button 
-                onClick={() => setIsPrdVisible(!isPrdVisible)}
-                className="w-full flex justify-between items-center p-4 text-left focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-t-lg"
-                aria-expanded={isPrdVisible}
-              >
-                <div className="flex flex-col">
+              <div className="w-full flex justify-between items-center p-4 text-left rounded-t-lg">
+                <div 
+                  className="flex-1 min-w-0 cursor-pointer"
+                  onClick={() => setIsPrdVisible(!isPrdVisible)}
+                >
                   <h3 className="font-bold text-lg text-white">Product Requirements Doc (PRD)</h3>
                   <p className="text-sm text-gray-400">The high-level requirements driving the architecture.</p>
                 </div>
-                {isPrdVisible 
-                  ? <ChevronUpIcon className="w-6 h-6 text-gray-300 flex-shrink-0 ml-4" /> 
-                  : <ChevronDownIcon className="w-6 h-6 text-gray-300 flex-shrink-0 ml-4" />}
-              </button>
+                <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
+                  <button
+                    onClick={onRegenerate}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                  >
+                    <SparklesIcon className="w-4 h-4" />
+                    <span>Regenerate Architecture</span>
+                  </button>
+                  <button 
+                    onClick={() => setIsPrdVisible(!isPrdVisible)}
+                    className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    aria-expanded={isPrdVisible}
+                    aria-label={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}
+                  >
+                    {isPrdVisible 
+                      ? <ChevronUpIcon className="w-6 h-6 text-gray-300" /> 
+                      : <ChevronDownIcon className="w-6 h-6 text-gray-300" />}
+                  </button>
+                </div>
+              </div>
+
               <div 
                 className="overflow-hidden transition-all duration-300 ease-in-out"
                 style={{ maxHeight: isPrdVisible ? PRD_CONTENT_HEIGHT : 0 }}

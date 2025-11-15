@@ -24,19 +24,38 @@ const App: React.FC = () => {
   const generatedCommand = useMemo(() => {
     let command = `pdd ${activeCommand}`;
     const activeOptions = COMMANDS[activeCommand].options;
+    let positionalArgs = '';
 
     // Ensure options are added in the order they are defined in constants.ts
     for (const option of activeOptions) {
         const key = option.name;
         const value = formData[key];
         if (value) {
+            // For 'gen' command, 'prompt' is a positional argument
+            if (activeCommand === CommandType.GEN && key === 'prompt') {
+                positionalArgs += ` ${value}`;
+                continue;
+            }
             // Escape double quotes within the value and wrap it in quotes if it contains spaces
             const sanitizedValue = value.includes(' ') ? `"${value.replace(/"/g, '\\"')}"` : value;
             command += ` --${key} ${sanitizedValue}`;
         }
     }
+    
+    command += positionalArgs;
+    
     return command;
   }, [activeCommand, formData]);
+
+  const handleRegenerateArchitecture = () => {
+    setView('builder');
+    setActiveCommand(CommandType.GEN);
+    setFormData({
+      'prompt': 'pdd/templates/architecture/architecture_json.prompt',
+      'output-file': 'architecture.json',
+      'env-file': 'PRD_FILE=docs/specs.md',
+    });
+  };
 
 
   return (
@@ -53,7 +72,7 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          <DependencyViewer />
+          <DependencyViewer onRegenerate={handleRegenerateArchitecture} />
         )}
       </main>
       {view === 'builder' && (
