@@ -1,8 +1,8 @@
 export const mockPrd = `
-# Product Requirements: PDD Command Builder UI
+# Product Requirements: Prompt Driven Development IDE
 
 ## 1. Overview
-The PDD Command Builder is a web-based graphical user interface (GUI) designed to help developers construct and understand command-line instructions for the Prompt-Driven Development (pdd) tool. It provides a user-friendly way to generate commands for scaffolding, code generation, testing, and more, without needing to memorize all the available flags and options.
+The Prompt Driven Development IDE is a web-based graphical user interface (GUI) designed to help developers construct and understand command-line instructions for the Prompt-Driven Development (pdd) tool. It provides a user-friendly way to generate commands for scaffolding, code generation, testing, and more, without needing to memorize all the available flags and options.
 
 ## 2. Core Features
 

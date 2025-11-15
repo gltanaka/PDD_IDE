@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => {
         <div className="flex items-center justify-between">
           <div className="flex-1">
              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                PDD Command Builder
+                Prompt Driven Development IDE
             </h1>
             <p className="mt-1 text-base text-gray-400">
                 Visually construct commands and explore prompt dependencies.
