@@ -8,6 +8,34 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        proxy: {
+          '/api': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, ''),
+          },
+          // Also proxy root API endpoints
+          '/commands': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+          '/execute': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+          '/docs': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+          '/openapi.json': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+          '/files': {
+            target: 'http://localhost:8000',
+            changeOrigin: true,
+          },
+        },
       },
       plugins: [react()],
       define: {

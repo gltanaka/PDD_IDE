@@ -1,0 +1,27 @@
+# Systemd service file for PDD Backend Server
+# Place this file in /etc/systemd/system/pdd-backend.service on your VM
+# Then run: sudo systemctl enable pdd-backend && sudo systemctl start pdd-backend
+
+[Unit]
+Description=PDD Backend API Server
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+# Update this path to where your backend is located
+WorkingDirectory=/opt/pdd_server
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+# Update this path to your Python virtual environment if using one
+ExecStart=/usr/bin/python3 /opt/pdd_server/main.py
+# Or if using virtual environment:
+# ExecStart=/opt/pdd_server/venv/bin/python /opt/pdd_server/main.py
+# Or using uvicorn directly:
+# ExecStart=/opt/pdd_server/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

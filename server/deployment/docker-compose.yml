@@ -1,0 +1,25 @@
+# Docker Compose configuration for PDD Backend Server
+# Use this to easily deploy the backend on a VM
+
+version: '3.8'
+
+services:
+  pdd-backend:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    container_name: pdd-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount pdd installation if it's on the host
+      # Adjust path based on where pdd is installed on your VM
+      - /usr/local/bin/pdd:/usr/local/bin/pdd:ro
+      # Optional: mount a directory for pdd to work with files
+      - ./pdd_workspace:/app/pdd_workspace
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    # Ensure pdd is available in PATH
+    # If pdd is installed differently, adjust the volume mount above
+

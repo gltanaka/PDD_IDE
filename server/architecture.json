@@ -1,0 +1,388 @@
+[
+  {
+    "reason": "To manage frontend dependencies, scripts, and project metadata for the React application.",
+    "description": "Defines project metadata, dependencies like React and ReactDOM, and scripts for running the development server, building the application, and running tests.",
+    "dependencies": [],
+    "priority": 1,
+    "filename": "package_json.prompt",
+    "filepath": "frontend/package.json",
+    "tags": [
+      "frontend",
+      "config"
+    ],
+    "interface": {
+      "type": "config",
+      "config": {
+        "keys": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "type": "string"
+          },
+          {
+            "name": "private",
+            "type": "boolean"
+          },
+          {
+            "name": "dependencies",
+            "type": "object"
+          },
+          {
+            "name": "scripts",
+            "type": "object"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To manage backend Python dependencies for the FastAPI application.",
+    "description": "Lists all Python packages required for the backend, such as fastapi, uvicorn, sqlalchemy, psycopg2-binary, and pydantic. This file is used by pip to install the necessary libraries.",
+    "dependencies": [],
+    "priority": 2,
+    "filename": "requirements_txt.prompt",
+    "filepath": "backend/requirements.txt",
+    "tags": [
+      "backend",
+      "config"
+    ]
+  },
+  {
+    "reason": "To provide a template for environment variables required by the application.",
+    "description": "An example file for environment variables, primarily the PostgreSQL database connection URL. Users will copy this to a `.env` file and populate it with their specific credentials for local development.",
+    "dependencies": [],
+    "priority": 3,
+    "filename": "env_example.prompt",
+    "filepath": ".env.example",
+    "tags": [
+      "config"
+    ],
+    "interface": {
+      "type": "config",
+      "config": {
+        "keys": [
+          {
+            "name": "DATABASE_URL",
+            "type": "string",
+            "required": true,
+            "source": "env",
+            "default": "postgresql://user:password@localhost/myapp"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To configure and manage the database connection for the FastAPI application.",
+    "description": "This module sets up the SQLAlchemy engine, the sessionmaker for creating database sessions (`SessionLocal`), and the declarative base class for ORM models. It reads the database URL from environment variables.",
+    "dependencies": [
+      "env_example.prompt"
+    ],
+    "priority": 4,
+    "filename": "db_config_Python.prompt",
+    "filepath": "backend/src/database.py",
+    "tags": [
+      "backend",
+      "database"
+    ],
+    "interface": {
+      "type": "module",
+      "module": {
+        "functions": [
+          {
+            "name": "get_db",
+            "signature": "() -> Generator[Session, None, None]",
+            "returns": "A database session generator for use with FastAPI's dependency injection.",
+            "sideEffects": [
+              "Creates and closes a database session."
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To define the database schema for a user entity using an ORM.",
+    "description": "Defines the `User` table using SQLAlchemy's ORM. It includes columns for id, email, and hashed_password, mapping the Python class to the PostgreSQL `users` table.",
+    "dependencies": [
+      "db_config_Python.prompt"
+    ],
+    "priority": 5,
+    "filename": "user_model_Python.prompt",
+    "filepath": "backend/src/models/user.py",
+    "tags": [
+      "backend",
+      "database",
+      "model"
+    ]
+  },
+  {
+    "reason": "To define the data shapes for API requests and responses, ensuring type safety and validation.",
+    "description": "Contains Pydantic models for user data validation and serialization. Includes schemas for user creation (`UserCreate`), user update (`UserUpdate`), and user representation in API responses (`User`). This separates the API data shape from the database model.",
+    "dependencies": [],
+    "priority": 6,
+    "filename": "user_schema_Python.prompt",
+    "filepath": "backend/src/schemas/user.py",
+    "tags": [
+      "backend",
+      "api",
+      "schema"
+    ]
+  },
+  {
+    "reason": "To abstract and centralize database operations, separating them from the API endpoint logic.",
+    "description": "Implements the Create, Read, Update, and Delete (CRUD) functions for users. These functions take a SQLAlchemy session and Pydantic schemas as arguments and perform the necessary database operations, returning ORM model instances.",
+    "dependencies": [
+      "db_config_Python.prompt",
+      "user_model_Python.prompt",
+      "user_schema_Python.prompt"
+    ],
+    "priority": 7,
+    "filename": "user_crud_Python.prompt",
+    "filepath": "backend/src/crud/user.py",
+    "tags": [
+      "backend",
+      "database",
+      "crud"
+    ],
+    "interface": {
+      "type": "module",
+      "module": {
+        "functions": [
+          {
+            "name": "get_user",
+            "signature": "(db: Session, user_id: int) -> models.User | None"
+          },
+          {
+            "name": "get_users",
+            "signature": "(db: Session, skip: int = 0, limit: int = 100) -> list[models.User]"
+          },
+          {
+            "name": "create_user",
+            "signature": "(db: Session, user: schemas.UserCreate) -> models.User"
+          },
+          {
+            "name": "update_user",
+            "signature": "(db: Session, user_id: int, user_update: schemas.UserUpdate) -> models.User | None"
+          },
+          {
+            "name": "delete_user",
+            "signature": "(db: Session, user_id: int) -> models.User | None"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To define and implement the user-related API endpoints as specified in the PRD.",
+    "description": "Creates a FastAPI `APIRouter` for all user-related endpoints: GET /api/users, POST /api/users, PUT /api/users/{id}, and DELETE /api/users/{id}. It uses dependency injection to get a database session and calls the corresponding CRUD functions to handle requests.",
+    "dependencies": [
+      "user_crud_Python.prompt",
+      "user_schema_Python.prompt",
+      "db_config_Python.prompt"
+    ],
+    "priority": 8,
+    "filename": "users_api_Python.prompt",
+    "filepath": "backend/src/routers/users.py",
+    "tags": [
+      "backend",
+      "api"
+    ],
+    "interface": {
+      "type": "api",
+      "api": {
+        "endpoints": [
+          {
+            "method": "GET",
+            "path": "/api/users",
+            "responseSchema": "list[schemas.User]"
+          },
+          {
+            "method": "POST",
+            "path": "/api/users",
+            "requestSchema": "schemas.UserCreate",
+            "responseSchema": "schemas.User"
+          },
+          {
+            "method": "PUT",
+            "path": "/api/users/{id}",
+            "requestSchema": "schemas.UserUpdate",
+            "responseSchema": "schemas.User"
+          },
+          {
+            "method": "DELETE",
+            "path": "/api/users/{id}",
+            "responseSchema": "schemas.User"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To serve as the main entry point for the backend application, tying all the components together.",
+    "description": "Initializes the main FastAPI application instance. It includes the API router for users and configures application-level settings and middleware, such as CORS, to allow requests from the frontend.",
+    "dependencies": [
+      "users_api_Python.prompt",
+      "db_config_Python.prompt"
+    ],
+    "priority": 9,
+    "filename": "main_app_Python.prompt",
+    "filepath": "backend/src/main.py",
+    "tags": [
+      "backend",
+      "app"
+    ]
+  },
+  {
+    "reason": "To provide a centralized, reusable service for the frontend to communicate with the backend API.",
+    "description": "A TypeScript module that exports functions for making HTTP requests to the user API endpoints. It encapsulates the logic for fetching, creating, updating, and deleting users, handling base URLs and potential API errors.",
+    "dependencies": [
+      "users_api_Python.prompt"
+    ],
+    "priority": 10,
+    "filename": "api_service_TypeScript.prompt",
+    "filepath": "frontend/src/services/api.ts",
+    "tags": [
+      "frontend",
+      "service"
+    ],
+    "interface": {
+      "type": "module",
+      "module": {
+        "functions": [
+          {
+            "name": "getUsers",
+            "signature": "() => Promise<User[]>"
+          },
+          {
+            "name": "createUser",
+            "signature": "(userData: UserCreate) => Promise<User>"
+          },
+          {
+            "name": "updateUser",
+            "signature": "(id: number, userData: UserUpdate) => Promise<User>"
+          },
+          {
+            "name": "deleteUser",
+            "signature": "(id: number) => Promise<void>"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To provide a reusable UI form for creating and editing user data.",
+    "description": "A controlled React component that renders a form with input fields for user details. It manages its own state for the form inputs and invokes a callback function on submission with the form data.",
+    "dependencies": [],
+    "priority": 11,
+    "filename": "user_form_component_TypeScriptReact.prompt",
+    "filepath": "frontend/src/components/UserForm.tsx",
+    "tags": [
+      "frontend",
+      "react",
+      "component"
+    ],
+    "interface": {
+      "type": "component",
+      "component": {
+        "props": [
+          {
+            "name": "onSubmit",
+            "type": "(data: UserFormData) => void",
+            "required": true
+          },
+          {
+            "name": "initialData",
+            "type": "User | null",
+            "required": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To display a list of users with options to edit or delete them.",
+    "description": "A React component that takes an array of user objects as a prop and renders them in a list or table. Each user entry includes buttons to trigger edit and delete actions, which are handled by parent components via callbacks.",
+    "dependencies": [],
+    "priority": 12,
+    "filename": "user_list_component_TypeScriptReact.prompt",
+    "filepath": "frontend/src/components/UserList.tsx",
+    "tags": [
+      "frontend",
+      "react",
+      "component"
+    ],
+    "interface": {
+      "type": "component",
+      "component": {
+        "props": [
+          {
+            "name": "users",
+            "type": "User[]",
+            "required": true
+          },
+          {
+            "name": "onEdit",
+            "type": "(user: User) => void",
+            "required": true
+          },
+          {
+            "name": "onDelete",
+            "type": "(userId: number) => void",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To provide the main user interface for viewing and managing all users.",
+    "description": "A top-level page component that orchestrates user management. It fetches the list of users using the API service, manages the application state, and renders the UserList and UserForm components to provide a complete user management experience.",
+    "dependencies": [
+      "api_service_TypeScript.prompt",
+      "user_list_component_TypeScriptReact.prompt",
+      "user_form_component_TypeScriptReact.prompt"
+    ],
+    "priority": 13,
+    "filename": "users_page_TypeScriptReact.prompt",
+    "filepath": "frontend/src/pages/UsersPage.tsx",
+    "tags": [
+      "frontend",
+      "react",
+      "page"
+    ],
+    "interface": {
+      "type": "page",
+      "page": {
+        "route": "/users",
+        "dataSources": [
+          {
+            "kind": "api",
+            "source": "/api/users",
+            "method": "GET",
+            "description": "Fetches the list of all users."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "reason": "To serve as the root component and entry point for the React application.",
+    "description": "The main `App` component that sets up the application's layout, context providers, and routing. It will render the `UsersPage` when the user navigates to the corresponding route.",
+    "dependencies": [
+      "users_page_TypeScriptReact.prompt"
+    ],
+    "priority": 14,
+    "filename": "app_component_TypeScriptReact.prompt",
+    "filepath": "frontend/src/App.tsx",
+    "tags": [
+      "frontend",
+      "react",
+      "app"
+    ]
+  }
+]
+
