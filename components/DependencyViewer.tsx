@@ -152,154 +152,162 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
 
   return (
     <>
-      <div className="bg-gray-800/50 rounded-lg p-6 shadow-lg ring-1 ring-white/10 overflow-auto">
-          <div 
-            className={`relative ${isSplitMode ? 'cursor-crosshair' : ''}`}
-            style={{ width: layout.width, height: totalHeight }}
-            aria-label="Prompt dependency graph"
-          >
-            {/* PRD Viewer */}
-            <div
-              className="absolute top-0 left-0 w-full bg-gray-700/50 rounded-lg shadow-md ring-1 ring-white/10 transition-all duration-300 ease-in-out z-10"
-              style={{ height: prdContainerHeight }}
+      <div className="flex flex-row items-start gap-6">
+        <div className="flex-grow bg-gray-800/50 rounded-lg p-6 shadow-lg ring-1 ring-white/10 overflow-auto">
+            <div 
+              className={`relative ${isSplitMode ? 'cursor-crosshair' : ''}`}
+              style={{ width: layout.width, height: totalHeight }}
+              aria-label="Prompt dependency graph"
             >
-              <div className="w-full flex justify-between items-center p-4 text-left rounded-t-lg">
-                <div 
-                  className="flex-1 min-w-0 cursor-pointer"
-                  onClick={() => setIsPrdVisible(!isPrdVisible)}
-                >
-                  <h3 className="font-bold text-lg text-white">Product Requirements Doc (PRD)</h3>
-                  <p className="text-sm text-gray-400">The high-level requirements driving the architecture.</p>
-                </div>
-                <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
-                   <button
-                    onClick={() => setIsSplitMode(prev => !prev)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700
-                    ${isSplitMode 
-                        ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
-                        : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
-                    }`}
-                  >
-                    <SplitIcon className="w-4 h-4" />
-                    <span>Split Prompt</span>
-                  </button>
-                  <button
-                    onClick={onRegenerate}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
-                  >
-                    <SparklesIcon className="w-4 h-4" />
-                    <span>Regenerate Architecture</span>
-                  </button>
-                  <button 
+              {/* PRD Viewer */}
+              <div
+                className="absolute top-0 left-0 w-full bg-gray-700/50 rounded-lg shadow-md ring-1 ring-white/10 transition-all duration-300 ease-in-out z-10"
+                style={{ height: prdContainerHeight }}
+              >
+                <div className="w-full flex justify-between items-center p-4 text-left rounded-t-lg">
+                  <div 
+                    className="flex-1 min-w-0 cursor-pointer"
                     onClick={() => setIsPrdVisible(!isPrdVisible)}
-                    className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    aria-expanded={isPrdVisible}
-                    aria-label={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}
                   >
-                    {isPrdVisible 
-                      ? <ChevronUpIcon className="w-6 h-6 text-gray-300" /> 
-                      : <ChevronDownIcon className="w-6 h-6 text-gray-300" />}
-                  </button>
+                    <h3 className="font-bold text-lg text-white">Product Requirements Doc (PRD)</h3>
+                    <p className="text-sm text-gray-400">The high-level requirements driving the architecture.</p>
+                  </div>
+                  <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
+                    <button
+                      onClick={onRegenerate}
+                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                    >
+                      <SparklesIcon className="w-4 h-4" />
+                      <span>Regenerate Architecture</span>
+                    </button>
+                    <button 
+                      onClick={() => setIsPrdVisible(!isPrdVisible)}
+                      className="p-2 rounded-md hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      aria-expanded={isPrdVisible}
+                      aria-label={isPrdVisible ? "Collapse PRD section" : "Expand PRD section"}
+                    >
+                      {isPrdVisible 
+                        ? <ChevronUpIcon className="w-6 h-6 text-gray-300" /> 
+                        : <ChevronDownIcon className="w-6 h-6 text-gray-300" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div 
+                  className="overflow-hidden transition-all duration-300 ease-in-out"
+                  style={{ maxHeight: isPrdVisible ? PRD_CONTENT_HEIGHT : 0 }}
+                >
+                  <pre className="bg-gray-900/50 m-4 mt-0 rounded-b-md p-4 text-sm text-gray-200 whitespace-pre-wrap break-all h-full overflow-auto">
+                      <code>{mockPrd}</code>
+                  </pre>
                 </div>
               </div>
 
-              <div 
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ maxHeight: isPrdVisible ? PRD_CONTENT_HEIGHT : 0 }}
+              <svg
+                width={layout.width}
+                height={totalHeight}
+                className="absolute top-0 left-0"
+                aria-hidden="true"
               >
-                <pre className="bg-gray-900/50 m-4 mt-0 rounded-b-md p-4 text-sm text-gray-200 whitespace-pre-wrap break-all h-full overflow-auto">
-                    <code>{mockPrd}</code>
-                </pre>
-              </div>
+                <defs>
+                  <marker
+                    id="arrowhead"
+                    markerWidth="10"
+                    markerHeight="7"
+                    refX="9"
+                    refY="3.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa" />
+                  </marker>
+                  <marker
+                    id="arrowhead-prd"
+                    markerWidth="10"
+                    markerHeight="7"
+                    refX="9"
+                    refY="3.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#0ea5e9" />
+                  </marker>
+                </defs>
+                {/* PRD Connector */}
+                <path
+                  d={`M ${layout.width / 2} ${prdContainerHeight + 10} C ${layout.width / 2} ${prdContainerHeight + 40}, ${connectorTarget.x} ${connectorTarget.y - 40}, ${connectorTarget.x} ${connectorTarget.y}`}
+                  stroke="#0ea5e9"
+                  strokeWidth="2"
+                  strokeDasharray="5 5"
+                  fill="none"
+                  markerEnd="url(#arrowhead-prd)"
+                />
+                {layout.edges.map(edge => {
+                  const sourceNode = layout.nodeMap.get(edge.source);
+                  const targetNode = layout.nodeMap.get(edge.target);
+                  if (!sourceNode || !targetNode) return null;
+
+                  const sourceX = sourceNode.x + NODE_WIDTH / 2;
+                  const sourceY = sourceNode.y + NODE_HEIGHT + yOffset;
+                  const targetX = targetNode.x + NODE_WIDTH / 2;
+                  const targetY = targetNode.y + yOffset;
+                  
+                  const dy = targetY - sourceY;
+                  
+                  const controlY1 = sourceY + dy / 2;
+                  const controlY2 = targetY - dy / 2;
+                  
+                  return (
+                    <path
+                      key={edge.id}
+                      d={`M ${sourceX} ${sourceY} C ${sourceX} ${controlY1}, ${targetX} ${controlY2}, ${targetX} ${targetY}`}
+                      stroke="#60a5fa"
+                      strokeWidth="1.5"
+                      fill="none"
+                      markerEnd="url(#arrowhead)"
+                    />
+                  )
+                })}
+              </svg>
+              {layout.nodes.map(node => (
+                <button
+                  key={node.id}
+                  onClick={() => handleNodeClick(node)}
+                  className={`absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer focus:outline-none focus:ring-2 transition-all duration-200 ${
+                    isSplitMode
+                      ? 'hover:ring-2 hover:ring-purple-400 focus:ring-purple-500'
+                      : 'hover:ring-2 hover:ring-blue-400 focus:ring-blue-500'
+                  }`}
+                  style={{
+                    width: NODE_WIDTH,
+                    height: NODE_HEIGHT,
+                    transform: `translate(${node.x}px, ${node.y + yOffset}px)`,
+                  }}
+                  title={node.path}
+                  role="figure"
+                  aria-label={`Prompt: ${node.label}`}
+                >
+                  <p className="font-bold text-sm text-white break-words">{node.label}</p>
+                  <p className="text-xs text-gray-400 truncate w-full">{node.path.substring(0, node.path.lastIndexOf('/')) || './'}</p>
+                </button>
+              ))}
             </div>
-
-            <svg
-              width={layout.width}
-              height={totalHeight}
-              className="absolute top-0 left-0"
-              aria-hidden="true"
+        </div>
+        <div className="w-56 flex-shrink-0">
+          <div className="bg-gray-800/50 rounded-lg p-4 shadow-lg ring-1 ring-white/10 sticky top-28">
+            <h3 className="text-lg font-semibold text-white mb-2">Graph Actions</h3>
+            <p className="text-xs text-gray-400 mb-4">Click an action, then select a node on the graph to apply it.</p>
+            <button
+              onClick={() => setIsSplitMode(prev => !prev)}
+              className={`w-full flex items-center justify-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800
+              ${isSplitMode 
+                  ? 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500' 
+                  : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+              }`}
             >
-              <defs>
-                <marker
-                  id="arrowhead"
-                  markerWidth="10"
-                  markerHeight="7"
-                  refX="9"
-                  refY="3.5"
-                  orient="auto"
-                >
-                  <polygon points="0 0, 10 3.5, 0 7" fill="#60a5fa" />
-                </marker>
-                <marker
-                  id="arrowhead-prd"
-                  markerWidth="10"
-                  markerHeight="7"
-                  refX="9"
-                  refY="3.5"
-                  orient="auto"
-                >
-                  <polygon points="0 0, 10 3.5, 0 7" fill="#0ea5e9" />
-                </marker>
-              </defs>
-               {/* PRD Connector */}
-               <path
-                 d={`M ${layout.width / 2} ${prdContainerHeight + 10} C ${layout.width / 2} ${prdContainerHeight + 40}, ${connectorTarget.x} ${connectorTarget.y - 40}, ${connectorTarget.x} ${connectorTarget.y}`}
-                 stroke="#0ea5e9"
-                 strokeWidth="2"
-                 strokeDasharray="5 5"
-                 fill="none"
-                 markerEnd="url(#arrowhead-prd)"
-              />
-              {layout.edges.map(edge => {
-                const sourceNode = layout.nodeMap.get(edge.source);
-                const targetNode = layout.nodeMap.get(edge.target);
-                if (!sourceNode || !targetNode) return null;
-
-                const sourceX = sourceNode.x + NODE_WIDTH / 2;
-                const sourceY = sourceNode.y + NODE_HEIGHT + yOffset;
-                const targetX = targetNode.x + NODE_WIDTH / 2;
-                const targetY = targetNode.y + yOffset;
-                
-                const dy = targetY - sourceY;
-                
-                const controlY1 = sourceY + dy / 2;
-                const controlY2 = targetY - dy / 2;
-                
-                return (
-                  <path
-                    key={edge.id}
-                    d={`M ${sourceX} ${sourceY} C ${sourceX} ${controlY1}, ${targetX} ${controlY2}, ${targetX} ${targetY}`}
-                    stroke="#60a5fa"
-                    strokeWidth="1.5"
-                    fill="none"
-                    markerEnd="url(#arrowhead)"
-                  />
-                )
-              })}
-            </svg>
-            {layout.nodes.map(node => (
-              <button
-                key={node.id}
-                onClick={() => handleNodeClick(node)}
-                className={`absolute bg-gray-700 rounded-lg p-3 shadow-md ring-1 ring-white/10 flex flex-col justify-center items-center text-center cursor-pointer focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  isSplitMode
-                    ? 'hover:ring-2 hover:ring-purple-400 focus:ring-purple-500'
-                    : 'hover:ring-2 hover:ring-blue-400 focus:ring-blue-500'
-                }`}
-                style={{
-                  width: NODE_WIDTH,
-                  height: NODE_HEIGHT,
-                  transform: `translate(${node.x}px, ${node.y + yOffset}px)`,
-                }}
-                title={node.path}
-                role="figure"
-                aria-label={`Prompt: ${node.label}`}
-              >
-                <p className="font-bold text-sm text-white break-words">{node.label}</p>
-                <p className="text-xs text-gray-400 truncate w-full">{node.path.substring(0, node.path.lastIndexOf('/')) || './'}</p>
-              </button>
-            ))}
+              <SplitIcon className="w-4 h-4" />
+              <span>{isSplitMode ? 'Cancel Split' : 'Split Prompt'}</span>
+            </button>
           </div>
+        </div>
       </div>
       {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} />}
     </>

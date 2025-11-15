@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => {
 
   return (
     <header className="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-10 py-4 mb-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex-1">
              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
