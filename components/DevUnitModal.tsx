@@ -89,7 +89,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
         <main className="p-4 overflow-y-auto relative">
           <div className="absolute top-6 right-6 flex items-center space-x-2">
             {activeTab === 'prompt' && (
-              <Tooltip content="Switch to builder to update code from this prompt">
+              <Tooltip content="Modify code by applying changes from this prompt.">
                 <button
                   onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
@@ -101,7 +101,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
               </Tooltip>
             )}
             {activeTab === 'code' && (
-              <Tooltip content="Switch to builder to generate code from this prompt">
+              <Tooltip content="Regenerate this code from its prompt.">
                 <button
                   onClick={() => onSetupCommandForPrompt(CommandType.GEN, node.path)}
                   className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
@@ -114,7 +114,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
             )}
             {activeTab === 'example' && (
               <>
-                <Tooltip content="Switch to builder to create an example from this prompt">
+                <Tooltip content="Generate a usage example for this component.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.EXAMPLE, node.path)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
@@ -124,7 +124,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                     <span>Create Example</span>
                   </button>
                 </Tooltip>
-                <Tooltip content="Switch to builder to verify functionality against this prompt">
+                <Tooltip content="Verify that an example implements the prompt's requirements.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.VERIFY, node.path)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-green-500 transition-colors"
@@ -134,7 +134,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                     <span>Verify</span>
                   </button>
                 </Tooltip>
-                <Tooltip content="Switch to builder to fix a crash using this prompt as context">
+                <Tooltip content="Diagnose a crash using this prompt and a stack trace.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.CRASH, node.path)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
@@ -148,7 +148,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
             )}
             {activeTab === 'test' && (
               <>
-                <Tooltip content="Switch to builder to generate a test from this prompt">
+                <Tooltip content="Generate a test file for this component based on the prompt.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.TEST, node.path)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
@@ -158,7 +158,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                     <span>Generate Test</span>
                   </button>
                 </Tooltip>
-                <Tooltip content="Switch to builder to fix a failing test using this prompt">
+                <Tooltip content="Fix a failing test file using this prompt as context.">
                   <button
                     onClick={() => onSetupCommandForPrompt(CommandType.FIX, node.path)}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-amber-500 transition-colors"
