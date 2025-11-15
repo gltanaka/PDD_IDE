@@ -25,9 +25,14 @@ const Header: React.FC<HeaderProps> = ({ currentView, onViewChange }) => {
              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Prompt Driven Development IDE
             </h1>
-            <p className="mt-1 text-base text-gray-400">
-                Visually construct commands and explore prompt dependencies.
-            </p>
+            <a 
+              href="https://promptdriven.ai" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="mt-1 text-base text-blue-400 hover:underline"
+            >
+              Regenerate, don't patch
+            </a>
           </div>
           <nav className="flex items-center space-x-2 flex-shrink-0">
             <button onClick={() => onViewChange('builder')} className={navButtonClasses('builder')}>
