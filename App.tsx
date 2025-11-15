@@ -57,7 +57,7 @@ const App: React.FC = () => {
     });
   };
 
-  const handleRegenerateCode = (promptPath: string) => {
+  const handleSetupGenCommand = (promptPath: string) => {
     setView('builder');
     setActiveCommand(CommandType.GEN);
     setFormData({
@@ -80,7 +80,7 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onRegenerateCode={handleRegenerateCode} />
+          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onSetupGenCommand={handleSetupGenCommand} />
         )}
       </main>
       {view === 'builder' && (

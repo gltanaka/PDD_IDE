@@ -5,12 +5,12 @@ import { ClipboardIcon, CheckIcon, SparklesIcon } from './Icon';
 interface DevUnitModalProps {
   node: PositionedNode;
   onClose: () => void;
-  onRegenerateCode: (promptPath: string) => void;
+  onSetupGenCommand: (promptPath: string) => void;
 }
 
 type Tab = 'prompt' | 'code' | 'example' | 'test';
 
-const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onRegenerateCode }) => {
+const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupGenCommand }) => {
   const [activeTab, setActiveTab] = useState<Tab>('prompt');
   const [isCopied, setIsCopied] = useState(false);
 
@@ -83,9 +83,19 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onRegenerate
 
         <main className="p-4 overflow-y-auto relative">
           <div className="absolute top-6 right-6 flex items-center space-x-2">
+            {activeTab === 'prompt' && (
+               <button
+                onClick={() => onSetupGenCommand(node.path)}
+                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                aria-label="Update code from this prompt"
+              >
+                <SparklesIcon className="w-4 h-4" />
+                <span>Update Code</span>
+              </button>
+            )}
             {activeTab === 'code' && (
               <button
-                onClick={() => onRegenerateCode(node.path)}
+                onClick={() => onSetupGenCommand(node.path)}
                 className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
                 aria-label="Regenerate code from this prompt"
               >
@@ -96,7 +106,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onRegenerate
             <button
               onClick={handleCopy}
               className="p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-700 transition-colors"
-              aria-label="Copy code"
+              aria-label="Copy content"
             >
               {isCopied ? (
                 <CheckIcon className="w-5 h-5 text-green-400" />
