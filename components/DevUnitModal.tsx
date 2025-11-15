@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { PositionedNode } from './DependencyViewer';
-import { ClipboardIcon, CheckIcon } from './Icon';
+import { ClipboardIcon, CheckIcon, SparklesIcon } from './Icon';
 
 interface DevUnitModalProps {
   node: PositionedNode;
   onClose: () => void;
+  onRegenerateCode: (promptPath: string) => void;
 }
 
 type Tab = 'prompt' | 'code' | 'example' | 'test';
 
-const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose }) => {
+const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onRegenerateCode }) => {
   const [activeTab, setActiveTab] = useState<Tab>('prompt');
   const [isCopied, setIsCopied] = useState(false);
 
@@ -81,17 +82,29 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose }) => {
         </nav>
 
         <main className="p-4 overflow-y-auto relative">
-          <button
-            onClick={handleCopy}
-            className="absolute top-6 right-6 p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-700 transition-colors"
-            aria-label="Copy code"
-          >
-            {isCopied ? (
-              <CheckIcon className="w-5 h-5 text-green-400" />
-            ) : (
-              <ClipboardIcon className="w-5 h-5 text-gray-400" />
+          <div className="absolute top-6 right-6 flex items-center space-x-2">
+            {activeTab === 'code' && (
+              <button
+                onClick={() => onRegenerateCode(node.path)}
+                className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-500 transition-colors"
+                aria-label="Regenerate code from this prompt"
+              >
+                <SparklesIcon className="w-4 h-4" />
+                <span>Generate</span>
+              </button>
             )}
-          </button>
+            <button
+              onClick={handleCopy}
+              className="p-2 rounded-md bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-700 transition-colors"
+              aria-label="Copy code"
+            >
+              {isCopied ? (
+                <CheckIcon className="w-5 h-5 text-green-400" />
+              ) : (
+                <ClipboardIcon className="w-5 h-5 text-gray-400" />
+              )}
+            </button>
+          </div>
           <pre className="bg-gray-900/50 rounded-md p-4 text-sm text-gray-200 whitespace-pre-wrap break-all">
             <code>{content}</code>
           </pre>

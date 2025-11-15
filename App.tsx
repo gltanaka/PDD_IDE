@@ -57,6 +57,14 @@ const App: React.FC = () => {
     });
   };
 
+  const handleRegenerateCode = (promptPath: string) => {
+    setView('builder');
+    setActiveCommand(CommandType.GEN);
+    setFormData({
+      'prompt': promptPath,
+    });
+  };
+
 
   return (
     <div className="min-h-screen">
@@ -72,7 +80,7 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          <DependencyViewer onRegenerate={handleRegenerateArchitecture} />
+          <DependencyViewer onRegenerate={handleRegenerateArchitecture} onRegenerateCode={handleRegenerateCode} />
         )}
       </main>
       {view === 'builder' && (

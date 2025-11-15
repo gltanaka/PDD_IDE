@@ -22,9 +22,10 @@ export interface PositionedNode extends MockPrompt {
 
 interface DependencyViewerProps {
   onRegenerate: () => void;
+  onRegenerateCode: (promptPath: string) => void;
 }
 
-const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate }) => {
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onRegenerateCode }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
 
@@ -275,7 +276,7 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate }) => 
             ))}
           </div>
       </div>
-      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} />}
+      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onRegenerateCode={onRegenerateCode} />}
     </>
   );
 };
