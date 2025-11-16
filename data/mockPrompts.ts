@@ -2,7 +2,7 @@ import { MockPrompt } from '../types';
 
 export const mockPrompts: MockPrompt[] = [
   { 
-    id: 'prompts/common/react-setup.prompt', 
+    id: 'prompts/common/react-setup_TypescriptReact.prompt', 
     includes: [],
     devUnit: {
       prompt: `
@@ -51,7 +51,7 @@ it('should render the title', () => {
     }
   },
   { 
-    id: 'prompts/common/tailwind-setup.prompt', 
+    id: 'prompts/common/tailwind-setup_TailwindConfig.prompt', 
     includes: [],
     devUnit: {
       prompt: `
@@ -87,7 +87,7 @@ module.exports = {
     }
   },
   { 
-    id: 'prompts/common/testing-lib.prompt', 
+    id: 'prompts/common/testing-lib_TestingLibrarySetup.prompt', 
     includes: [],
     devUnit: {
       prompt: `
@@ -122,15 +122,15 @@ test('renders a greeting', () => {
     }
   },
   { 
-    id: 'prompts/components/button.prompt', 
-    includes: ['prompts/common/react-setup.prompt'],
+    id: 'prompts/components/button_TypescriptReact.prompt', 
+    includes: ['prompts/common/react-setup_TypescriptReact.prompt'],
     devUnit: {
       prompt: `
 # Instruction
 Create a reusable Button component.
 
 # Imports
-- prompts/common/react-setup.prompt
+- prompts/common/react-setup_TypescriptReact.prompt
 
 # Rules
 - Accept standard button props (e.g., onClick, children).
@@ -177,15 +177,15 @@ test('calls onClick when clicked', async () => {
     }
   },
   { 
-    id: 'prompts/components/modal.prompt', 
-    includes: ['prompts/common/react-setup.prompt'],
+    id: 'prompts/components/modal_TypescriptReact.prompt', 
+    includes: ['prompts/common/react-setup_TypescriptReact.prompt'],
     devUnit: {
       prompt: `
 # Instruction
 Create a basic Modal component.
 
 # Imports
-- prompts/common/react-setup.prompt
+- prompts/common/react-setup_TypescriptReact.prompt
 
 # Rules
 - Show/hide based on an 'isOpen' prop.
@@ -240,11 +240,11 @@ test('does not render when closed', () => {
     }
   },
   { 
-    id: 'prompts/scaffold/react-spa.prompt', 
+    id: 'prompts/scaffold/react-spa_ReactSPA.prompt', 
     includes: [
-      'prompts/common/react-setup.prompt',
-      'prompts/common/tailwind-setup.prompt',
-      'prompts/components/button.prompt'
+      'prompts/common/react-setup_TypescriptReact.prompt',
+      'prompts/common/tailwind-setup_TailwindConfig.prompt',
+      'prompts/components/button_TypescriptReact.prompt'
     ],
     devUnit: {
       prompt: `
@@ -252,9 +252,9 @@ test('does not render when closed', () => {
 Scaffold a Single Page Application using React.
 
 # Imports
-- prompts/common/react-setup.prompt
-- prompts/common/tailwind-setup.prompt
-- prompts/components/button.prompt
+- prompts/common/react-setup_TypescriptReact.prompt
+- prompts/common/tailwind-setup_TailwindConfig.prompt
+- prompts/components/button_TypescriptReact.prompt
 
 # Rules
 - Set up a basic file structure (src, components).
@@ -289,16 +289,16 @@ const App = () => {
     }
   },
   { 
-    id: 'prompts/test/generate-test.prompt', 
-    includes: ['prompts/common/testing-lib.prompt', 'prompts/components/button.prompt'],
+    id: 'prompts/test/generate-test_ReactTest.prompt', 
+    includes: ['prompts/common/testing-lib_TestingLibrarySetup.prompt', 'prompts/components/button_TypescriptReact.prompt'],
     devUnit: {
       prompt: `
 # Instruction
 Generate a test file for the Button component.
 
 # Imports
-- prompts/common/testing-lib.prompt
-- prompts/components/button.prompt
+- prompts/common/testing-lib_TestingLibrarySetup.prompt
+- prompts/components/button_TypescriptReact.prompt
 
 # Rules
 - Use React Testing Library.
@@ -326,15 +326,15 @@ test('button click handler is called', async () => {
     }
   },
   { 
-    id: 'prompts/full-stack-app.prompt', 
-    includes: ['prompts/scaffold/react-spa.prompt'],
+    id: 'prompts/full-stack-app_FullStackApp.prompt', 
+    includes: ['prompts/scaffold/react-spa_ReactSPA.prompt'],
     devUnit: {
       prompt: `
 # Instruction
 Scaffold a full-stack application.
 
 # Imports
-- prompts/scaffold/react-spa.prompt
+- prompts/scaffold/react-spa_ReactSPA.prompt
 
 # Backend
 - Node.js with Express
