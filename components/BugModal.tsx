@@ -43,7 +43,7 @@ const BugModal: React.FC<BugModalProps> = ({ onClose, onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <main className="p-6 space-y-4">
             <p className="text-sm text-gray-300">
-              Describe the bug you've encountered in plain English. The AI will use this description and the current prompt's context to generate a potential fix.
+              Describe the bug you've encountered in plain English. The AI will use this description and the current prompt's context to generate a test case that reproduces the bug.
             </p>
             <div>
               <label htmlFor="bug-description" className="sr-only">
@@ -74,7 +74,7 @@ const BugModal: React.FC<BugModalProps> = ({ onClose, onSubmit }) => {
               className="px-4 py-2 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500 transition-colors disabled:opacity-50"
               disabled={!bugDescription.trim()}
             >
-              Generate Fix
+              Generate Test Case
             </button>
           </footer>
         </form>

@@ -243,7 +243,7 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                     <span>Fix Test</span>
                   </button>
                 </Tooltip>
-                <Tooltip content="Describe a bug to generate a fix for it.">
+                <Tooltip content="Describe a bug to generate a test case that reproduces it.">
                   <button
                     onClick={() => onReportBug(node.path)}
                     className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
