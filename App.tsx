@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { GoogleGenAI } from '@google/genai';
 import { CommandType } from './types';
 import { COMMANDS } from './constants';
+import { mockPrompts } from './data/mockPrompts';
 import Tabs from './components/Tabs';
 import CommandForm from './components/CommandForm';
 import GeneratedCommand from './components/GeneratedCommand';
@@ -85,6 +87,50 @@ const App: React.FC = () => {
     setActiveCommand(command);
     setFormData({});
   };
+  
+  const handleDetectChanges = async (changeRequest: string): Promise<string> => {
+    if (!process.env.API_KEY) {
+      console.error("API_KEY environment variable not set.");
+      return Promise.reject(new Error("API key is not configured. This feature requires a valid API key."));
+    }
+    
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const promptFilePaths = mockPrompts.map(p => p.id).join('\n');
+    const systemInstruction = `You are an expert software architect. Your task is to identify which file is the most relevant to a given change request. The user will provide a change request and a list of available prompt files. Respond with ONLY the single, most relevant file path from the list provided. Do not add any explanation or formatting.`;
+    
+    const contents = `
+Change Request: "${changeRequest}"
+
+Available prompt files:
+${promptFilePaths}
+
+Which file is the most relevant to this change request?
+    `.trim();
+
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: contents,
+        config: {
+          systemInstruction: systemInstruction,
+          temperature: 0,
+        }
+      });
+      const suggestedFile = response.text.trim();
+
+      // Basic validation to ensure the model returned a plausible file path
+      if (mockPrompts.some(p => p.id === suggestedFile)) {
+        return suggestedFile;
+      } else {
+        console.warn("Model returned a file path that doesn't exist in the mock data:", suggestedFile);
+        // Fallback to the first prompt as a default for this demo
+        return mockPrompts[0].id;
+      }
+    } catch (error) {
+      console.error("Error calling Gemini API:", error);
+      return Promise.reject(new Error("Failed to get suggestion from the AI. Please check the console for details."));
+    }
+  };
 
   const handleProposeChange = (changeRequest: string) => {
     setIsChangeModalOpen(false);
@@ -127,6 +173,7 @@ const App: React.FC = () => {
         <ChangeModal 
           onClose={() => setIsChangeModalOpen(false)} 
           onSubmit={handleProposeChange} 
+          onDetect={handleDetectChanges}
         />
       )}
     </div>

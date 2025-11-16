@@ -91,3 +91,10 @@ export const LightBulbIcon = (props: React.SVGProps<SVGSVGElement>) => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.311a7.5 7.5 0 00-7.5 0c.065.58.433 1.059.998 1.423.57.368 1.25.623 1.998.835h.034c.748.212 1.523.325 2.308.325s1.56-.113 2.308-.325h.034c.748-.212 1.428-.467 1.998-.835.565-.364.933-.843.998-1.423zM11.25 6a3.75 3.75 0 107.5 0v-1.5a3.75 3.75 0 00-7.5 0v1.5z" />
     </svg>
 );
+
+export const SpinnerIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" {...props}>
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+);
