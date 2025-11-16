@@ -26,9 +26,10 @@ interface DependencyViewerProps {
   onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
   onSetupCommand: (command: CommandType) => void;
   onProposeChange: () => void;
+  onReportBug: (promptPath: string) => void;
 }
 
-const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt, onSetupCommand, onProposeChange }) => {
+const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSetupCommandForPrompt, onSetupCommand, onProposeChange, onReportBug }) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [isPrdVisible, setIsPrdVisible] = useState(false);
   const [isSplitMode, setIsSplitMode] = useState(false);
@@ -338,7 +339,7 @@ const DependencyViewer: React.FC<DependencyViewerProps> = ({ onRegenerate, onSet
           </div>
         </div>
       </div>
-      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} allPrompts={mockPrompts} />}
+      {selectedNode && <DevUnitModal node={selectedNode} onClose={() => setSelectedNodeId(null)} onSetupCommandForPrompt={onSetupCommandForPrompt} allPrompts={mockPrompts} onReportBug={onReportBug} />}
     </>
   );
 };

@@ -98,3 +98,16 @@ export const SpinnerIcon = (props: React.SVGProps<SVGSVGElement>) => (
         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
     </svg>
 );
+
+export const BugAntIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25v3.75m0 0a3 3 0 003 3h3" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-2.636-2.636" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 8.25l2.636-2.636" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 15.75l-2.636 2.636" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l2.636 2.636" />
+    </svg>
+);

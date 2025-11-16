@@ -9,6 +9,7 @@ import GeneratedCommand from './components/GeneratedCommand';
 import Header from './components/Header';
 import DependencyViewer from './components/DependencyViewer';
 import ChangeModal from './components/ChangeModal';
+import BugModal from './components/BugModal';
 
 type View = 'builder' | 'dependencies';
 
@@ -17,6 +18,8 @@ const App: React.FC = () => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [view, setView] = useState<View>('dependencies');
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
+  const [isBugModalOpen, setIsBugModalOpen] = useState(false);
+  const [activePromptForBug, setActivePromptForBug] = useState<string | null>(null);
 
   const activeConfig = COMMANDS[activeCommand];
 
@@ -43,13 +46,14 @@ const App: React.FC = () => {
                  activeCommand === CommandType.SPLIT ||
                  activeCommand === CommandType.AUTO_DEPS ||
                  activeCommand === CommandType.SYNC ||
-                 activeCommand === CommandType.CHANGE
-                ) && (key === 'prompt' || key === 'change-request')
+                 activeCommand === CommandType.CHANGE ||
+                 activeCommand === CommandType.BUG
+                ) && (key === 'prompt' || key === 'change-request' || key === 'bug-description')
             ) || (activeCommand === CommandType.CONFLICT && key === 'files');
 
             if (isPositional) {
                 // For change-request, we need to wrap in quotes
-                const positionalValue = (key === 'change-request') ? `"${value.replace(/"/g, '\\"')}"` : value;
+                const positionalValue = (key === 'change-request' || key === 'bug-description') ? `"${value.replace(/"/g, '\\"')}"` : value;
                 positionalArgs += ` ${positionalValue}`;
                 continue;
             }
@@ -60,6 +64,13 @@ const App: React.FC = () => {
     }
     
     command += positionalArgs;
+
+    // A bit of a hack: for bug command, prompt is an option but we want it after the positional arg
+    if (activeCommand === CommandType.BUG && formData['prompt']) {
+        const promptValue = formData['prompt'];
+        command = command.replace(` --prompt ${promptValue}`, ''); // remove from middle
+        command += ` --prompt ${promptValue}`; // add to end
+    }
     
     return command;
   }, [activeCommand, formData]);
@@ -141,6 +152,22 @@ Which file is the most relevant to this change request?
     });
   };
 
+  const handleOpenBugModal = (promptPath: string) => {
+    setActivePromptForBug(promptPath);
+    setIsBugModalOpen(true);
+  };
+
+  const handleReportBug = (bugDescription: string) => {
+    setIsBugModalOpen(false);
+    setView('builder');
+    setActiveCommand(CommandType.BUG);
+    setFormData({
+      'prompt': activePromptForBug,
+      'bug-description': bugDescription,
+    });
+    setActivePromptForBug(null);
+  };
+
 
   return (
     <div className="min-h-screen">
@@ -161,6 +188,7 @@ Which file is the most relevant to this change request?
             onSetupCommandForPrompt={handleSetupCommandForPrompt}
             onSetupCommand={handleSetupCommand}
             onProposeChange={() => setIsChangeModalOpen(true)}
+            onReportBug={handleOpenBugModal}
           />
         )}
       </main>
@@ -174,6 +202,12 @@ Which file is the most relevant to this change request?
           onClose={() => setIsChangeModalOpen(false)} 
           onSubmit={handleProposeChange} 
           onDetect={handleDetectChanges}
+        />
+      )}
+      {isBugModalOpen && (
+        <BugModal
+          onClose={() => setIsBugModalOpen(false)}
+          onSubmit={handleReportBug}
         />
       )}
     </div>

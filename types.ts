@@ -13,6 +13,7 @@ export enum CommandType {
   AUTO_DEPS = 'auto-deps',
   SYNC = 'sync',
   CHANGE = 'change',
+  BUG = 'bug',
 }
 
 export interface CommandOption {

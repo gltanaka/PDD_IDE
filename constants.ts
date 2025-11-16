@@ -130,5 +130,15 @@ export const COMMANDS: Record<CommandType, CommandConfig> = {
       { name: 'change-request', type: 'textarea', placeholder: 'e.g., "Add a loading spinner to the button"', description: 'A natural language description of the desired change.', required: true },
       { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for analyzing the change request.' },
     ]
+  },
+  [CommandType.BUG]: {
+    name: CommandType.BUG,
+    description: "Generate a fix for a bug based on a description.",
+    options: [
+      { name: 'bug-description', type: 'textarea', placeholder: 'e.g., The button is not clickable after the first click.', description: 'A natural language description of the bug.', required: true },
+      { name: 'prompt', type: 'textarea', placeholder: 'e.g., ./prompts/components/button.prompt', description: 'The prompt file related to the buggy code.', required: true },
+      { name: 'model', type: 'text', placeholder: 'e.g., gemini-2.5-pro', description: 'The model to use for generating the fix.' },
+      { name: 'output-file', type: 'text', placeholder: 'e.g., ./src/components/Button.fixed.tsx', description: 'File to write the suggested fix to.' },
+    ]
   }
 };

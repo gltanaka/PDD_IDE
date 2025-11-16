@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { PositionedNode } from './DependencyViewer';
-import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon, SyncIcon, DocumentArrowDownIcon } from './Icon';
+import { ClipboardIcon, CheckIcon, SparklesIcon, LinkIcon, SyncIcon, DocumentArrowDownIcon, BugAntIcon } from './Icon';
 import { CommandType, MockPrompt } from '../types';
 import Tooltip from './Tooltip';
 
@@ -9,11 +9,12 @@ interface DevUnitModalProps {
   onClose: () => void;
   onSetupCommandForPrompt: (command: CommandType, promptPath: string) => void;
   allPrompts: MockPrompt[];
+  onReportBug: (promptPath: string) => void;
 }
 
 type Tab = 'prompt' | 'code' | 'example' | 'test';
 
-const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupCommandForPrompt, allPrompts }) => {
+const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupCommandForPrompt, allPrompts, onReportBug }) => {
   const [activeTab, setActiveTab] = useState<Tab>('prompt');
   const [isCopied, setIsCopied] = useState(false);
   const [isPreprocessedViewVisible, setIsPreprocessedViewVisible] = useState(false);
@@ -240,6 +241,16 @@ const DevUnitModal: React.FC<DevUnitModalProps> = ({ node, onClose, onSetupComma
                   >
                     <SparklesIcon className="w-4 h-4" />
                     <span>Fix Test</span>
+                  </button>
+                </Tooltip>
+                <Tooltip content="Describe a bug to generate a fix for it.">
+                  <button
+                    onClick={() => onReportBug(node.path)}
+                    className="flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-red-500 transition-colors"
+                    aria-label="Report a bug for this prompt"
+                  >
+                    <BugAntIcon className="w-4 h-4" />
+                    <span>Report Bug</span>
                   </button>
                 </Tooltip>
               </>
